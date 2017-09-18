@@ -102,11 +102,20 @@ router.route('/managers/users/edit')
 
 router.route('/managers/repairs/add')
 	.post(function(req, res) {
-		var newRepairs = [];
-  	newRepairs.push(req.body);
-  	newRepairs[0].id = getNextId(repairs);
-  	repairs.push(newRepairs[0]);
-  	res.json(repairs);
+		var filtered=users.filter(function(user){
+			return user.uname==req.body.assignedTo;
+		});
+
+		if (filtered.length == 0) {
+			res.status(404).send('User: ' + req.body.assignedTo + ' does not exist');
+		} else {
+			// TODO - check for time collision
+			var newRepairs = [];
+	  	newRepairs.push(req.body);
+	  	newRepairs[0].id = getNextId(repairs);
+	  	repairs.push(newRepairs[0]);
+	  	res.json(repairs);
+	  }
 	});
 
 router.route('/managers/repairs/del')
@@ -121,13 +130,23 @@ router.route('/managers/repairs/del')
 
 router.route('/managers/repairs/edit')
 	.post(function(req, res) {
-		var filtered=repairs.filter(function(repair){
-			return repair.id!=req.body.id;
+		var filtered=users.filter(function(user){
+			return user.uname==req.body.assignedTo;
 		});
-		repairs = filtered;
-		repairs.push(req.body);
-		repairs = sortById(repairs);
-		res.json(repairs);
+
+		if (filtered.length == 0) {
+			res.status(404).send('User: ' + req.body.assignedTo + ' does not exist');
+		} else {
+			filtered=repairs.filter(function(repair){
+				return repair.id!=req.body.id;
+			});
+
+			// TODO - check for time collision
+			repairs = filtered;
+			repairs.push(req.body);
+			repairs = sortById(repairs);
+			res.json(repairs);
+		}
 	});
 
 router.route('/managers/repairs')

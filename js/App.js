@@ -28,53 +28,44 @@ export let App = React.createClass ({
         });
     },
     render() {
-        const {role, token} = this.state;
+        const {uname, role, token} = this.state;
 
         if (role == null) {
             return (
                 <LoginManager
                     onLogin={this.login}
                     onLogout={this.logout}
-                    ref={(loginManager)=> {
-                        this.loginManager = loginManager;
-                    }}
                 />
             )
         } else if (role == 'manager') {
             return (
                 <div>
                     <LoginManager
-                        uname={this.state.uname}
-                        role={this.state.role}
+                        uname={uname}
+                        role={role}
                         onLogin={this.login}
                         onLogout={this.logout}
-                        ref={(loginManager)=> {
-                            this.loginManager = loginManager;
-                        }}
                     />
-                    <UserManager
-                        token={this.state.token}
+                    <UserManager 
+                        token={token}
                     />
                     <RepairManager
-                        token={this.state.token}
+                        token={token}
                     />
                 </div>
             )
-        } else {
+        } else if (role == 'user') {
             return (
                 <div>
                     <LoginManager
-                        uname={this.state.uname}
-                        role={this.state.role}
+                        uname={uname}
+                        role={role}
                         onLogin={this.login}
                         onLogout={this.logout}
-                        ref={(loginManager)=> {
-                            this.loginManager = loginManager;
-                        }}
                     />
                     <UserRepairManager
-                        token={this.state.token}
-                        uname={this.state.uname}
+                        token={token}
+                        uname={uname}
                     />
                 </div>
             )

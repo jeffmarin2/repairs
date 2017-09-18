@@ -25,13 +25,12 @@ export let RepairManager = React.createClass ({
         return axios
             .post(urls[action], data, config)
             .then((res) => {
-                if (res.data.status == 400)
-                    alert(res.data.message);
-                else {
-                    this.setState({
-                        repairs: res.data
-                    })
-                }
+                this.setState({
+                    repairs: res.data
+                })
+            })
+            .catch((res) => {
+               alert(res.response.data);
             })
     },
     componentDidMount() {
@@ -60,9 +59,21 @@ export let RepairManager = React.createClass ({
         }
     },
     edit(repair) {
-        // TODO validate
-        this.form.clear();
-        this.fetch('edit', repair);
+        if (repair.desc == '' || repair.date == '' || repair.time == '')
+            alert('You are missing information')
+        else {
+            var dateValid = repair.date.match(/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/i); 
+            var timeValid = repair.time.match(/^([01]\d|2[0-3]):?([0-5]\d)$/i); 
+
+            if (!timeValid)
+                alert('Please enter time as HH:MM (24 hour clock)')
+            else if (!dateValid)
+                alert('Please enter date as YYYY-MM-DD')
+            else {        
+                this.form.clear();
+                this.fetch('edit', repair);
+            }
+        }
     },
     startEdit() {
         if (this.state.selected == -1)
@@ -90,6 +101,9 @@ export let RepairManager = React.createClass ({
     },
     search(searchParams) {
         this.fetch('list', searchParams);
+    },
+    onAddComment(comment) {
+
     },
     render() {
         return (

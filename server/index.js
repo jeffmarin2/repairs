@@ -14,7 +14,5 @@ app.all('/api/managers/*', validateManagerRole);
 app.all('/api/users/*', validateUserRole);
 app.use('/api',api);
 
-
-app.use(express.static(path.join(__dirname,'../public')));
 app.listen(port);
 console.log('react repair server listening on ' + port);

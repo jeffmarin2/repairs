@@ -35,7 +35,6 @@ export let LoginManager = React.createClass ({
                 this.props.onLogin(response.data);
             })
             .catch((error) => {
-                alert(error);
                 alert('User not found');
             });
     },
