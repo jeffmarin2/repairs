@@ -10,9 +10,7 @@ export let AddCommentForm = React.createClass ({
         };
     },
     handleClick() {
-        const {props, state} = this;
-
-        props.onAddComment(state.comments);
+        this.props.onAddComment(this.state.comments);
     },    
     handleCommentsChange(e) {
         this.setState({
@@ -20,14 +18,11 @@ export let AddCommentForm = React.createClass ({
         });
     },
     render() {
-        const {props, state} = this;
-
         return ( 
             <div>
                 <br/>
-                <textarea type="text" value={state.comments} rows="4" cols="40" onChange={this.handleCommentsChange} />
+                <textarea type="text" value={this.state.comments} rows="4" cols="40" onChange={this.handleCommentsChange} />
                 <button onClick={this.handleClick}>Add</button>
-                <br/>
             </div>
         )
     }

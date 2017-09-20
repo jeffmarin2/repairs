@@ -30,6 +30,7 @@ export let UserManager = React.createClass ({
                     this.setState({
                         users: res.data
                     })
+                    this.form.clear();
                 }
             })
     },
@@ -47,7 +48,6 @@ export let UserManager = React.createClass ({
             if (filtered.length > 0)
                 alert('This username already exists')
             else {
-                this.form.clear();
                 this.fetch('add', user);
             }
         }

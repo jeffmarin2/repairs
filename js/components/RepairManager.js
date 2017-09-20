@@ -28,6 +28,7 @@ export let RepairManager = React.createClass ({
                 this.setState({
                     repairs: res.data
                 })
+                this.form.clear();
             })
             .catch((res) => {
                alert(res.response.data);
@@ -53,7 +54,6 @@ export let RepairManager = React.createClass ({
                 repair.completed = 'Not Completed';
                 repair.approved = 'Not Approved';
 
-                this.form.clear();
                 this.fetch('add', repair);
             }
         }
@@ -70,7 +70,6 @@ export let RepairManager = React.createClass ({
             else if (!dateValid)
                 alert('Please enter date as YYYY-MM-DD')
             else {        
-                this.form.clear();
                 this.fetch('edit', repair);
             }
         }

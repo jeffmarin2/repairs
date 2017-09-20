@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
-
+// data
 var users = [
 	{ id: 1, uname: 'jmarin', pwd: 'j', role: 'manager'},
 	{ id: 2, uname: 'mmouse', pwd: 'm', role: 'user'},
@@ -10,12 +10,13 @@ var users = [
 ];
 
 var repairs = [
-	{ id: 1, desc: 'Fill Pothole', date: '2017-09-15', time:'07:00', assignedTo: '', completed: 'Not Completed', approved: 'Not Approved', comments: ''},
-	{ id: 2, desc: 'Replace Window', date: '2017-09-13', time:'18:00', assignedTo: 'mmouse', completed: 'Not Completed', approved: 'Not Approved', comments: 'See Superintendant'},
-	{ id: 3, desc: 'Drain Flood', date: '2017-09-13', time:'12:00', assignedTo: 'dduck', completed: 'Not Completed', approved: 'Not Approved', comments: 'Use Pump'},
-	{ id: 4, desc: 'Replace Another Window', date: '2017-09-13', time:'18:00', assignedTo: 'mmouse', completed: 'Not Completed', approved: 'Not Approved', comments: 'See Superintendant'},
+	{ id: 1, desc: 'Fill Pothole', date: '2017-09-13', time:'07:00', assignedTo: '', completed: 'Not Completed', approved: 'Not Approved', comments: ''},
+	{ id: 2, desc: 'Replace Window', date: '2017-09-13', time:'08:00', assignedTo: 'mmouse', completed: 'Not Completed', approved: 'Not Approved', comments: 'See Superintendant'},
+	{ id: 3, desc: 'Drain Flood', date: '2017-09-13', time:'09:00', assignedTo: 'dduck', completed: 'Not Completed', approved: 'Not Approved', comments: 'Use Pump'},
+	{ id: 4, desc: 'Replace Another Window', date: '2017-09-13', time:'10:00', assignedTo: 'mmouse', completed: 'Not Completed', approved: 'Not Approved', comments: 'See Superintendant'},
 ];
 
+// helper functions
 function getNextId(array) {
 	var max = 0;
 	for(var i=0; i<array.length;i++)
@@ -28,6 +29,35 @@ function sortById(array) {
 	return array.sort(function(obj1, obj2) {
 		return obj1.id-obj2.id;
 	})
+}
+
+function getRepairStart(repair) {
+	var start = new Date(Date.parse(repair.date + 'T' + repair.time + ':00.000Z'));
+	start.setTime(start.getTime()+start.getTimezoneOffset()*60*1000);
+	return start;
+}
+
+function checkForRepairCollisions(newRepair, repairs) {
+	var newStart = getRepairStart(newRepair);
+	var isCollision = false, otherRepairDesc = '';
+
+	for(var i=0;i<repairs.length;i++) {
+  	var otherStart = getRepairStart(repairs[i]);
+  	var diff = newStart.getTime() - otherStart.getTime();
+
+  	if (diff > 0 && diff < (60*60*1000)) {
+			isCollision = true;
+			otherRepairDesc = repairs[i].desc;
+			break;
+		}
+	}
+
+	var ret = {
+		isCollision: isCollision,
+		otherRepairDesc: otherRepairDesc
+	};
+
+	return ret;
 }
 
 // available to all
@@ -109,12 +139,20 @@ router.route('/managers/repairs/add')
 		if (filtered.length == 0) {
 			res.status(404).send('User: ' + req.body.assignedTo + ' does not exist');
 		} else {
-			// TODO - check for time collision
+
 			var newRepairs = [];
 	  	newRepairs.push(req.body);
-	  	newRepairs[0].id = getNextId(repairs);
-	  	repairs.push(newRepairs[0]);
-	  	res.json(repairs);
+
+	  	var newRepair = newRepairs[0];
+
+			var ret = checkForRepairCollisions(newRepair, repairs);
+			if (ret.isCollision)
+				res.status(404).send('This will collide with ' + ret.otherRepairDesc);
+			else {
+		  	newRepairs[0].id = getNextId(repairs);
+		  	repairs.push(newRepairs[0]);
+		  	res.json(repairs);
+		  }
 	  }
 	});
 
@@ -141,11 +179,16 @@ router.route('/managers/repairs/edit')
 				return repair.id!=req.body.id;
 			});
 
-			// TODO - check for time collision
-			repairs = filtered;
-			repairs.push(req.body);
-			repairs = sortById(repairs);
-			res.json(repairs);
+	  	var edittedRepair = req.body;
+			var ret = checkForRepairCollisions(edittedRepair, filtered);
+			if (ret.isCollision)
+				res.status(404).send('This will collide with ' + ret.otherRepairDesc);
+			else {
+				repairs = filtered;
+				repairs.push(req.body);
+				repairs = sortById(repairs);
+				res.json(repairs);
+			}
 		}
 	});
 
@@ -195,33 +238,5 @@ router.route('/users/repairs/complete/:uname')
 		});
 		res.json(filtered);
 	});	
-
-
-function getRoleFromToken(token) {
-  	jwt.verify(token, 'reactrepairs', function(err, decoded) {
-	    if (err) 
-	      return null;
-	    else
-	    	return decoded.role;
-	  });
-}
-
-function verifyToken(req, res, next) {
-
-  // check header or url parameters or post parameters for token
-  var token = req.headers['x-access-token'];
-  if (!token) 
-    return res.status(403).send({ auth: false, message: 'No token provided.' });
-
-  // verifies secret and checks exp
-  jwt.verify(token, 'reactrepairs', function(err, decoded) {      
-    if (err) 
-      return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });    
-
-    // if everything is good, save to request for use in other routes
-    req.userId = decoded.id;
-    next();
-  });
-}
 
 module.exports = router;
