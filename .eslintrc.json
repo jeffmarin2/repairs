@@ -1,0 +1,46 @@
+{
+    "parser": "babel-eslint",
+	"extends": "eslint-config-airbnb",
+	"rules": {
+        "max-len": [1, 120, 2],
+        "quote-props": [1, "consistent-as-needed"],
+        "no-cond-assign": [2, "except-parens"],
+        "radix": 0,
+        "space-infix-ops": 0,
+        "no-unused-vars": [1, {"vars": "local", "args": "none"}],
+        "default-case": 0,
+        "no-else-return": 0,
+        "no-param-reassign": 0,
+        "quotes": 0
+    },
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "quotes": ["error","single"],
+        "semi": ["error","always"],
+        "linebreak-style": ["error","windows"],
+        "indent": ["error", 4],
+        "comma-dangle": ["error", "never"],
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "import/prefer-default-export": 0,
+        "react/jsx-indent": 0,
+        "react/jsx-indent-props": 0,
+        "jsx-a11y/href-no-hash": 0,
+        "curly": 0,
+        "no-alert":0,
+        "no-useless-escape":0
+
+    }
+}

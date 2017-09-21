@@ -1,60 +1,58 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import axios from 'axios';
-import {Selectable} from './Selectable';
-import {AddUserForm} from './AddUserForm';
+import { Selectable } from './Selectable';
+import { AddUserForm } from './AddUserForm';
 
 const urls = {
-    'list': '/api/managers/users',
-    'add': '/api/managers/users/add',
-    'del': '/api/managers/users/del',
-    'edit': '/api/managers/users/edit'
-}
+    list: '/api/managers/users',
+    add: '/api/managers/users/add',
+    del: '/api/managers/users/del',
+    edit: '/api/managers/users/edit'
+};
 
-export let UserManager = React.createClass ({
+export const UserManager = React.createClass({
     getInitialState() {
         return {
             users: [],
             selected: -1
         };
-    },    
+    },
     fetch(action, data) {
-        var config = {
-            headers: {'x-access-token': this.props.token}
+        const config = {
+            headers: { 'x-access-token': this.props.token }
         };
         return axios
             .post(urls[action], data, config)
             .then((res) => {
-                if (res.data.status == 400)
+                if (res.data.status === 400)
                     alert(res.data.message);
                 else {
                     this.setState({
                         users: res.data
-                    })
+                    });
                     this.form.clear();
                 }
-            })
+            });
     },
     componentDidMount() {
         this.fetch('list', {});
     },
     add(user) {
-        if (user.uname == '' || user.pwd == '' || user.role == '')
-            alert('You are missing information')
+        if (user.uname === '' || user.pwd === '' || user.role === '')
+            alert('You are missing information');
         else {
-            var filtered=this.state.users.filter(function(u){
-                return (u.uname==user.uname);
-            });
+            const filtered = this.state.users.filter(u => (u.uname === user.uname));
 
             if (filtered.length > 0)
-                alert('This username already exists')
+                alert('This username already exists');
             else {
                 this.fetch('add', user);
             }
         }
     },
     edit(user) {
-        if (user.uname == '' || user.pwd == '' || user.role == '')
-            alert('You are missing information')
+        if (user.uname === '' || user.pwd === '' || user.role === '')
+            alert('You are missing information');
         else {
             this.form.clear();
             this.fetch('edit', user);
@@ -67,19 +65,19 @@ export let UserManager = React.createClass ({
         this.form.clear();
     },
     del() {
-        if (this.state.selected == -1)
-            alert('Please select a user first')
+        if (this.state.selected === -1)
+            alert('Please select a user first');
         else {
-            var id = this.state.users[this.state.selected].id;
+            const id = this.state.users[this.state.selected].id;
             this.fetch('del', {
-                id: id
+                id
             });
         }
     },
     select(idx) {
         this.setState({
             selected: idx
-        })
+        });
     },
     render() {
         return (
@@ -88,21 +86,21 @@ export let UserManager = React.createClass ({
                 <button onClick={this.startAdd}>Add</button>
                 <button onClick={this.startEdit}>Edit</button>
                 <button onClick={this.del}>Delete</button>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <Selectable
-                    rows={this.state.users} 
+                    rows={this.state.users}
                     selected={this.state.selected}
                     onSelect={this.select}
                 />
                 <AddUserForm
-                    onAdd={this.add} 
+                    onAdd={this.add}
                     onEdit={this.edit}
-                    ref={(form)=> {
+                    ref={(form) => {
                         this.form = form;
                     }}
                 />
             </div>
-        )
+        );
     }
-})
+});

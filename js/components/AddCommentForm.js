@@ -1,29 +1,29 @@
 import React, { PropTypes } from 'react';
 
-export let AddCommentForm = React.createClass ({
+export const AddCommentForm = React.createClass({
     propTypes: {
-        onAddComment: PropTypes.func.isRequired,
+        onAddComment: PropTypes.func.isRequired
     },
     getInitialState() {
         return {
-          comments: ''
+            comments: ''
         };
     },
     handleClick() {
         this.props.onAddComment(this.state.comments);
-    },    
+    },
     handleCommentsChange(e) {
         this.setState({
             comments: e.target.value
         });
     },
     render() {
-        return ( 
+        return (
             <div>
-                <br/>
+                <br />
                 <textarea type="text" value={this.state.comments} rows="4" cols="40" onChange={this.handleCommentsChange} />
                 <button onClick={this.handleClick}>Add</button>
             </div>
-        )
+        );
     }
-})
+});

@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 
-export let AddUserForm = React.createClass ({
+export const AddUserForm = React.createClass({
     propTypes: {
         onAdd: PropTypes.func.isRequired,
-        onEdit: PropTypes.func.isRequired,
+        onEdit: PropTypes.func.isRequired
     },
     getInitialState() {
         return {
@@ -15,15 +15,15 @@ export let AddUserForm = React.createClass ({
         };
     },
     handleClick() {
-        const {id, uname, pwd, role} = this.state;
-        var user = {
-            id: id,
-            uname: uname,
-            pwd: pwd,
-            role: role
+        const { id, uname, pwd, role } = this.state;
+        const user = {
+            id,
+            uname,
+            pwd,
+            role
         };
 
-        if (this.state.mode == 'Add')
+        if (this.state.mode === 'Add')
             this.props.onAdd(user);
         else
             this.props.onEdit(user);
@@ -62,22 +62,22 @@ export let AddUserForm = React.createClass ({
         });
     },
     render() {
-        const {state} = this;
+        const { state } = this;
         return (
             <div>
-                <br/>
+                <br />
                 <span>Username:</span>&nbsp;
                 <input type="text" size="10" value={state.uname} onChange={this.handleUnameChange} />&nbsp;
                 <span>Password:</span>&nbsp;
                 <input type="text" size="10" value={state.pwd} onChange={this.handlePwdChange} />&nbsp;
                 <span>Role:</span>&nbsp;
                 <select value={state.role} onChange={this.handleRoleChange}>
-                    <option></option>
+                    <option />
                     <option>user</option>
                     <option>manager</option>
                 </select>&nbsp;
                 <button onClick={this.handleClick}>{this.state.mode}</button>
             </div>
-        )
+        );
     }
-})
+});

@@ -5,17 +5,24 @@
   "scripts": {
     "webpack": "webpack",
     "start": "webpack-dev-server --hot --inline",
-    "test": "mocha --timeout 10000"
+    "apitest": "mocha --timeout 10000",
+    "uitest": "jest"
   },
   "author": "Jeff Marin",
   "devDependencies": {
     "async": "^2.5.0",
     "babel-core": "^6.1.21",
+    "babel-eslint": "^8.0.0",
     "babel-jest": "^21.0.2",
     "babel-loader": "^6.1.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "copy-webpack-plugin": "^0.2.0",
+    "eslint": "^4.3.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0",
     "jest": "^21.1.0",
     "react-hot-loader": "^1.3.0",
     "react-test-renderer": "^15.6.1",

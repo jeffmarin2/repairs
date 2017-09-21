@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {LoginManager} from './components/LoginManager';
-import {UserManager} from './components/UserManager';
-import {RepairManager} from './components/RepairManager';
-import {UserRepairManager} from './components/UserRepairManager';
+import { LoginManager } from './components/LoginManager';
+import { UserManager } from './components/UserManager';
+import { RepairManager } from './components/RepairManager';
+import { UserRepairManager } from './components/UserRepairManager';
 
-export let App = React.createClass ({
+export const App = React.createClass({
     getInitialState() {
         return {
             uname: null,
@@ -28,7 +28,7 @@ export let App = React.createClass ({
         });
     },
     render() {
-        const {uname, role, token} = this.state;
+        const { uname, role, token } = this.state;
 
         if (role == null) {
             return (
@@ -36,8 +36,8 @@ export let App = React.createClass ({
                     onLogin={this.login}
                     onLogout={this.logout}
                 />
-            )
-        } else if (role == 'manager') {
+            );
+        } else if (role === 'manager') {
             return (
                 <div>
                     <LoginManager
@@ -46,15 +46,15 @@ export let App = React.createClass ({
                         onLogin={this.login}
                         onLogout={this.logout}
                     />
-                    <UserManager 
+                    <UserManager
                         token={token}
                     />
                     <RepairManager
                         token={token}
                     />
                 </div>
-            )
-        } else if (role == 'user') {
+            );
+        } else if (role === 'user') {
             return (
                 <div>
                     <LoginManager
@@ -68,7 +68,7 @@ export let App = React.createClass ({
                         uname={uname}
                     />
                 </div>
-            )
+            );
         }
     }
-})
+});

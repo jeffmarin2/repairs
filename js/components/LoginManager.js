@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import axios from 'axios';
 
-export let LoginManager = React.createClass ({
+export const LoginManager = React.createClass({
     propTypes: {
         onLogin: PropTypes.func.isRequired,
         onLogout: PropTypes.func.isRequired
@@ -20,55 +20,58 @@ export let LoginManager = React.createClass ({
         this.setState({
             [name]: value
         });
-    },    
-    logout(event) {
+    },
+    logout() {
         this.props.onLogout();
     },
-    login(event) {
-        var data = {
+    login() {
+        const data = {
             uname: this.state.uname,
             pwd: this.state.pwd
-        }
+        };
 
-        axios.post('/api/login',data)
+        axios.post('/api/login', data)
             .then((response) => {
                 this.props.onLogin(response.data);
             })
-            .catch((error) => {
+            .catch(() => {
                 alert('User not found');
             });
     },
-    register(event) {
-        var data = {
+    register() {
+        const data = {
             uname: this.state.uname,
             pwd: this.state.pwd
-        }
+        };
 
-        axios.post('/api/register',data)
+        axios.post('/api/register', data)
             .then((response) => {
                 this.props.onLogin(response.data);
             })
-            .catch((error) => {
+            .catch(() => {
                 alert('User already exists');
             });
     },
     render() {
         if (!this.props.uname) {
-            return <div>
-                Username: <input type='text' size='10' name='uname' onChange={this.handleInputChange} />
-                <br/>
-                Password: <input type='password' size='10' name='pwd' onChange={this.handleInputChange} />
-                <br/>
-                <button onClick={this.login}>Login</button>&nbsp;
-                Or&nbsp;
-                <button onClick={this.register}>Register</button>
-            </div>;
-        } else {
-            return <div>
-                Welcome {this.props.uname}&nbsp;&nbsp;
-                Role: {this.props.role}&nbsp;&nbsp;
-                <button onClick={this.logout}>Logout</button>
-            </div>;
+            return (
+                <div>
+                    Username: <input type="text" size="10" name="uname" onChange={this.handleInputChange} />
+                    <br />
+                    Password: <input type="password" size="10" name="pwd" onChange={this.handleInputChange} />
+                    <br />
+                    <button onClick={this.login}>Login</button>&nbsp;
+                    Or&nbsp;
+                    <button onClick={this.register}>Register</button>
+                </div>
+            );
         }
+        return (
+            <div>
+                    Welcome {this.props.uname}&nbsp;&nbsp;
+                    Role: {this.props.role}&nbsp;&nbsp;
+                <button onClick={this.logout}>Logout</button>
+            </div>
+        );
     }
-})
+});

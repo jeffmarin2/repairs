@@ -1,16 +1,15 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import axios from 'axios';
-import {Selectable} from './Selectable';
-import {AddRepairForm} from './AddRepairForm';
-import {RepairFilter} from './RepairFilter';
-import {AddCommentForm} from './AddCommentForm';
+import { Selectable } from './Selectable';
+import { RepairFilter } from './RepairFilter';
+import { AddCommentForm } from './AddCommentForm';
 
 const urls = {
-    'list': '/api/users/repairs/',
-    'complete': '/api/users/repairs/complete/'
-}
+    list: '/api/users/repairs/',
+    complete: '/api/users/repairs/complete/'
+};
 
-export let UserRepairManager = React.createClass ({
+export const UserRepairManager = React.createClass({
     getInitialState() {
         return {
             repairs: [],
@@ -18,38 +17,38 @@ export let UserRepairManager = React.createClass ({
         };
     },
     fetch(action, data) {
-        var config = {
-            headers: {'x-access-token': this.props.token}
-        };        
-        var url = urls[action] + this.props.uname;
+        const config = {
+            headers: { 'x-access-token': this.props.token }
+        };
+        const url = urls[action] + this.props.uname;
 
         return axios
             .post(url, data, config)
             .then((res) => {
                 this.setState({
                     repairs: res.data
-                })
-            })
+                });
+            });
     },
     componentDidMount() {
         this.fetch('list');
     },
     complete() {
-        if (this.state.selected == -1)
-            alert('Please select a repair first')
-        else if (this.state.repairs[this.state.selected].completed == 'Completed')
-            alert('This repair has already been completed')
+        if (this.state.selected === -1)
+            alert('Please select a repair first');
+        else if (this.state.repairs[this.state.selected].completed === 'Completed')
+            alert('This repair has already been completed');
         else {
-            var repairid = this.state.repairs[this.state.selected].id;
+            const repairid = this.state.repairs[this.state.selected].id;
             this.fetch('complete', {
-                repairid: repairid
+                repairid
             });
         }
-    },    
+    },
     select(idx) {
-        const {state, form} = this;
+        const { state, form } = this;
 
-        var c = state.repairs[idx].comments;
+        const c = state.repairs[idx].comments;
         form.setState({
             comments: c
         });
@@ -61,10 +60,10 @@ export let UserRepairManager = React.createClass ({
         this.fetch('list', searchParams);
     },
     addComment(comments) {
-        if (this.state.selected == -1)
-            alert('Please select a repair first')
+        if (this.state.selected === -1)
+            alert('Please select a repair first');
         else {
-            var newrepairs = this.state.repairs;
+            const newrepairs = this.state.repairs;
             newrepairs[this.state.selected].comments = comments;
 
             this.setState({
@@ -78,26 +77,26 @@ export let UserRepairManager = React.createClass ({
                 <h3>Repairs Assigned To {this.props.uname}</h3>
                 <RepairFilter
                     onSearch={this.search}
-                    role='user'
-                    ref={(searchform)=> {
+                    role="user"
+                    ref={(searchform) => {
                         this.searchform = searchform;
                     }}
-                /> 
+                />
                 <button onClick={this.complete}>Complete</button>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <Selectable
-                    rows={this.state.repairs} 
+                    rows={this.state.repairs}
                     selected={this.state.selected}
                     onSelect={this.select}
                 />
                 <AddCommentForm
                     onAddComment={this.addComment}
-                    ref={(form)=> {
-                            this.form = form;
-                        }}
+                    ref={(form) => {
+                        this.form = form;
+                    }}
                 />
             </div>
-        )
+        );
     }
-})
+});
