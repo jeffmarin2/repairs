@@ -45,7 +45,7 @@ function checkForRepairCollisions(newRepair, repairs) {
   	var otherStart = getRepairStart(repairs[i]);
   	var diff = newStart.getTime() - otherStart.getTime();
 
-  	if (diff > 0 && diff < (60*60*1000)) {
+  	if (diff >= 0 && diff < (60*60*1000)) {
 			isCollision = true;
 			otherRepairDesc = repairs[i].desc;
 			break;
