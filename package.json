@@ -5,8 +5,7 @@
   "scripts": {
     "webpack": "webpack",
     "start": "webpack-dev-server --hot --inline",
-    "apitest": "mocha --timeout 10000",
-    "uitest": "jest"
+    "test": "mocha --timeout 10000"
   },
   "author": "Jeff Marin",
   "devDependencies": {

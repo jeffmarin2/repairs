@@ -1,29 +1,18 @@
-var jwt = require('jsonwebtoken');
- 
-module.exports = function(req, res, next) {
-  var token = req.headers['x-access-token'];
-  if (token) {
-    jwt.verify(token, 'reactrepairs', function(err, decoded) {
-      if (err) {
-        console.log('validateUserRole err:' + JSON.stringify(err));
-        return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-      } else if (decoded.role != 'user') {
-        res.status(400);
-        res.json({
-          "status": 400,
-          "message": "Token not user"
+const jwt = require('jsonwebtoken');
+
+module.exports = (req, res, next) => {
+    const token = req.headers['x-access-token'];
+    if (token) {
+        jwt.verify(token, 'reactrepairs', (err, decoded) => {
+            if (err) {
+                res.status(500).send({ message: 'Failed to authenticate token.' });
+            } else if (decoded.role !== 'user') {
+                res.status(400).send({ message: 'Token not user' });
+            } else {
+                next();
+            }
         });
-        return;
-      } else {
-        next();
-      }
-    })
-  } else {
-    res.status(401);
-    res.json({
-      "status": 401,
-      "message": "Invalid Token"
-    });
-    return;
-  }
+    } else {
+        res.status(401).send({ message: 'Invalid Token' });
+    }
 };
